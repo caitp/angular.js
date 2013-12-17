@@ -204,6 +204,9 @@ function qFactory(nextTick, exceptionHandler) {
     deferred = {
 
       resolve: function(val) {
+        if (val === deferred) {
+          throw new TypeError();
+        }
         if (pending) {
           var callbacks = pending;
           pending = undefined;
@@ -214,7 +217,9 @@ function qFactory(nextTick, exceptionHandler) {
               var callback;
               for (var i = 0, ii = callbacks.length; i < ii; i++) {
                 callback = callbacks[i];
-                value.then(callback[0], callback[1], callback[2]);
+                if (typeof value.then === 'function') {
+                  value.then.call(value, callback[0], callback[1], callback[2]);
+                }
               }
             });
           }
@@ -223,6 +228,9 @@ function qFactory(nextTick, exceptionHandler) {
 
 
       reject: function(reason) {
+        if (reason === deferred || reason === deferred.promise) {
+          throw new TypeError();
+        }
         deferred.resolve(reject(reason));
       },
 
@@ -277,7 +285,7 @@ function qFactory(nextTick, exceptionHandler) {
           if (pending) {
             pending.push([wrappedCallback, wrappedErrback, wrappedProgressback]);
           } else {
-            value.then(wrappedCallback, wrappedErrback, wrappedProgressback);
+            value.then.call(value, wrappedCallback, wrappedErrback, wrappedProgressback);
           }
 
           return result.promise;
@@ -331,7 +339,16 @@ function qFactory(nextTick, exceptionHandler) {
 
 
   var ref = function(value) {
-    if (value && isFunction(value.then)) return value;
+    if (value && isFunction(value) || typeof value === 'object') {
+      var then;
+      try {
+        if (then = value.then && typeof then === 'function') {
+          return value;
+        }
+      } catch (e) {
+        return reject(e);
+      }
+    }
     return {
       then: function(callback) {
         var result = defer();
@@ -342,7 +359,6 @@ function qFactory(nextTick, exceptionHandler) {
       }
     };
   };
-
 
   /**
    * @ngdoc
@@ -380,6 +396,7 @@ function qFactory(nextTick, exceptionHandler) {
    * @returns {Promise} Returns a promise that was already resolved as rejected with the `reason`.
    */
   var reject = function(reason) {
+    console.log('reject', reason);
     return {
       then: function(callback, errback) {
         var result = defer();
