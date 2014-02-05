@@ -642,11 +642,12 @@ function createEventHandler(element, events) {
         event.defaultPrevented = true;
         prevent.call(event);
       };
-      event.defaultPrevented = false;
     }
 
     event.isDefaultPrevented = function() {
-      return event.defaultPrevented || event.returnValue === false;
+      return isDefined(event.defaultPrevented)
+        ? event.defaultPrevented
+        : (event.returnValue === false);
     };
 
     // Copy event handlers in case event handlers array is modified during execution.
