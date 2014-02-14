@@ -6,8 +6,11 @@ export SAUCE_ACCESS_KEY=`echo $SAUCE_ACCESS_KEY | rev`
 
 if [ $JOB = "unit" ]; then
   grunt ci-checks
+  echo "RUNNING 'grunt test:docgen'"
   grunt test:docgen
+  echo "RUNNING 'grunt test:promises-aplus'"
   grunt test:promises-aplus
+  echo "RUNNING 'grunt test:unit --browsers SL_Chrome,SL_Safari,SL_Firefox,SL_IE_8,SL_IE_9,SL_IE_10,SL_IE_11 --reporters dots'"
   grunt test:unit --browsers SL_Chrome,SL_Safari,SL_Firefox,SL_IE_8,SL_IE_9,SL_IE_10,SL_IE_11 --reporters dots
 elif [ $JOB = "e2e" ]; then
   export GRUNT_TARGET="test:protractor"
