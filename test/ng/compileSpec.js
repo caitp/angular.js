@@ -617,7 +617,7 @@ describe('$compile', function() {
           expect(element).toHaveClass('class_2');
         }));
 
-        if (!msie || msie > 11) {
+        //if (!msie || msie > 11) {
           // style interpolation not working on IE (including IE11).
           it('should handle interpolated css style from replacing directive', inject(
             function($compile, $rootScope) {
@@ -625,7 +625,7 @@ describe('$compile', function() {
               $rootScope.$digest();
               expect(element.css('width')).toBe('2px');
           }));
-        }
+        //}
 
         it('should merge interpolated css class', inject(function($compile, $rootScope) {
           element = $compile('<div class="one {{cls}} three" replace></div>')($rootScope);
