@@ -296,6 +296,17 @@ describe('injector', function() {
       expect(log).toEqual('abc');
     });
 
+    it('should not load dependent functions only once', function() {
+      function  generateValueModule(name, value) {
+        return function ($provide) {
+          $provide.value(name, value);
+        };
+      }
+      var injector = createInjector([generateValueModule('name1', 'value1'),
+                                     generateValueModule('name2', 'value2')]);
+      expect(injector.get('name2')).toBe('value2');
+    });
+
     it('should execute runBlocks after injector creation', function() {
       var log = '';
       angular.module('a', [], function(){ log += 'a'; }).run(function() { log += 'A'; });

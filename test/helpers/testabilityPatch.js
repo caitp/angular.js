@@ -24,7 +24,8 @@ beforeEach(function() {
     }
 
     // This resets global id counter;
-    uid = ['0', '0', '0'];
+    uids.uid = ['0', '0', '0'];
+    uids.moduleUid = ['0', '0', '0'];
 
     // reset to jQuery or default to us.
     bindJQuery();

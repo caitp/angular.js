@@ -12,7 +12,7 @@
     -ngMinErr,
     -angularModule,
     -nodeName_,
-    -uid,
+    -uids,
 
     -lowercase,
     -uppercase,
@@ -164,7 +164,10 @@ var /** holds major version number for IE or NaN for real browsers */
     angular           = window.angular || (window.angular = {}),
     angularModule,
     nodeName_,
-    uid               = ['0', '0', '0'];
+    uids              = {
+      uid: ['0', '0', '0'],
+      moduleUid: ['0', '0', '0']
+    };
 
 /**
  * IE 11 changed the format of the UserAgent string.
@@ -281,6 +284,31 @@ function reverseParams(iteratorFn) {
   return function(value, key) { iteratorFn(key, value); };
 }
 
+function genNextUid(name) {
+  return function() {
+    var uid = uids[name];
+    var index = uid.length;
+    var digit;
+
+    while(index) {
+      index--;
+      digit = uid[index].charCodeAt(0);
+      if (digit == 57 /*'9'*/) {
+        uid[index] = 'A';
+        return uid.join('');
+      }
+      if (digit == 90  /*'Z'*/) {
+        uid[index] = '0';
+      } else {
+        uid[index] = String.fromCharCode(digit + 1);
+        return uid.join('');
+      }
+    }
+    uid.unshift('0');
+    return uid.join('');
+  };
+}
+
 /**
  * A consistent way of creating unique IDs in angular. The ID is a sequence of alpha numeric
  * characters such as '012ABC'. The reason why we are not using simply a number counter is that
@@ -289,28 +317,8 @@ function reverseParams(iteratorFn) {
  *
  * @returns {string} an unique alpha-numeric string
  */
-function nextUid() {
-  var index = uid.length;
-  var digit;
-
-  while(index) {
-    index--;
-    digit = uid[index].charCodeAt(0);
-    if (digit == 57 /*'9'*/) {
-      uid[index] = 'A';
-      return uid.join('');
-    }
-    if (digit == 90  /*'Z'*/) {
-      uid[index] = '0';
-    } else {
-      uid[index] = String.fromCharCode(digit + 1);
-      return uid.join('');
-    }
-  }
-  uid.unshift('0');
-  return uid.join('');
-}
-
+var nextUid = genNextUid('uid');
+var nextModuleUid = genNextUid('moduleUid');
 
 /**
  * Set or clear the hashkey for an object.

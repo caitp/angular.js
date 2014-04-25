@@ -2168,6 +2168,15 @@ if(window.jasmine || window.mocha) {
           });
         }
         injector = currentSpec.$injector = angular.injector(modules, strictDi);
+        var afterFn = typeof this.after === 'function' ? angular.bind(this, this.after) :
+          typeof window.after === 'function' ? window.after : angular.noop;
+        afterFn(function() {
+          angular.forEach(modules, function(module) {
+            if (typeof module === 'function' || (module && typeof module === 'object')) {
+              delete module.$$hashKey;
+            }
+          });
+        });
         currentSpec.$injectorStrict = strictDi;
       }
       for(var i = 0, ii = blockFns.length; i < ii; i++) {
