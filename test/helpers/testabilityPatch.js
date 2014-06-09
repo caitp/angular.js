@@ -31,6 +31,24 @@ beforeEach(function() {
   }
 
   angular.element(document.body).empty().removeData();
+  var spec = this;
+  var hashKeys = [];
+  hashKey = function(obj) {
+    var key = $$ngHashKey(obj);
+
+    if (typeof obj === 'function' || (obj && typeof obj === 'object')) {
+      if (hashKeys.length === 0) {
+        spec.after(function() {
+          forEach(hashKeys, function(obj) {
+            obj.$$hashKey = undefined;
+          });
+          hashKeys.length = 0;
+        });
+      }
+      hashKeys.push(obj);
+    }
+    return key;
+  };
 });
 
 afterEach(function() {

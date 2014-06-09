@@ -13,16 +13,19 @@
  * @returns {string} hash string such that the same input will have the same hash string.
  *         The resulting string key is in 'type:hashKey' format.
  */
-function hashKey(obj) {
+
+var hashKey = function(obj, uidFn) {
   var objType = typeof obj,
       key;
 
-  if (objType == 'object' && obj !== null) {
+  uidFn = uidFn || nextUid;
+
+  if (objType === 'function' || (objType == 'object' && obj !== null)) {
     if (typeof (key = obj.$$hashKey) == 'function') {
       // must invoke on object to keep the right this
       key = obj.$$hashKey();
     } else if (key === undefined) {
-      key = obj.$$hashKey = nextUid();
+      key = obj.$$hashKey = uidFn();
     }
   } else {
     key = obj;
@@ -31,10 +34,13 @@ function hashKey(obj) {
   return objType + ':' + key;
 }
 
+var $$ngHashKey = hashKey;
+
 /**
  * HashMap which can use objects as keys
  */
-function HashMap(array){
+function HashMap(array, uidFn){
+  this.uidFn = uidFn || nextUid;
   forEach(array, this.put, this);
 }
 HashMap.prototype = {
@@ -44,7 +50,7 @@ HashMap.prototype = {
    * @param value value to store can be any type
    */
   put: function(key, value) {
-    this[hashKey(key)] = value;
+    this[hashKey(key, this.uidFn)] = value;
   },
 
   /**
@@ -52,7 +58,7 @@ HashMap.prototype = {
    * @returns {Object} the value for the key
    */
   get: function(key) {
-    return this[hashKey(key)];
+    return this[hashKey(key, this.uidFn)];
   },
 
   /**
@@ -60,7 +66,7 @@ HashMap.prototype = {
    * @param key
    */
   remove: function(key) {
-    var value = this[key = hashKey(key)];
+    var value = this[key = hashKey(key, this.uidFn)];
     delete this[key];
     return value;
   }
