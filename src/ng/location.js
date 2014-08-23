@@ -73,6 +73,18 @@ function stripFile(url) {
   return url.substr(0, stripHash(url).lastIndexOf('/') + 1);
 }
 
+// Variation on stripFile() which will not return the empty string if a base is specified without a 
+// file part.
+function stripBaseHref(base) {
+  if (base && base[base.length - 1] !== '/') {
+    var index = base.lastIndexOf('/');
+    if (index >= 0) {
+      return base.substr(0, index + 1);
+    }
+  }
+  return base;
+}
+
 /* return the server only (scheme://host:port) */
 function serverBase(url) {
   return url.substring(0, url.indexOf('/', url.indexOf('//') + 2));
@@ -621,7 +633,10 @@ function $LocationProvider(){
       function( $rootScope,   $browser,   $sniffer,   $rootElement) {
     var $location,
         LocationMode,
-        baseHref = $browser.baseHref(), // if base[href] is undefined, it defaults to ''
+        baseHref = $browser.baseHref(), // if base[href] is undefined, it defaults to '',
+        baseHrefNoFile = stripBaseHref(baseHref),
+        baseHrefRegexp = baseHref && new RegExp(
+          '^(' + escapeForRegexp(baseHref) + '|' + escapeForRegexp(baseHrefNoFile) + ')'),
         initialUrl = $browser.url(),
         appBase;
 
@@ -672,13 +687,11 @@ function $LocationProvider(){
 
         if (href && href.indexOf('://') < 0) {         // Ignore absolute URLs
           var prefix = '#' + hashPrefix;
+          var tmp;
           if (href[0] == '/') {
             // Account for base href already present in appBase
-            if (baseHref && href.indexOf(baseHref) === 0) {
-              href = href.substr(baseHref.length);
-              if (!href || href[0] != '/') {
-                href = '/' + href;
-              }
+            if (baseHrefRegexp && (tmp = href.replace(baseHrefRegexp, '')) !== href) {
+              href = (!tmp || tmp[0] !== '/') ? ('/' + tmp) : tmp;
             }
             // absolute path - replace old path
             absHref = appBase + prefix + href;
