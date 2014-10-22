@@ -79,7 +79,7 @@ function pluralExtractor(content, localeInfo) {
     goog.LOCALE = localeIds[i].match(/[^_]+/)[0];
     try {
       eval(contentText);
-    } catch(e) {
+    } catch (e) {
       console.log("Error in eval(contentText): " + e.stack);
     }
     if (!goog.i18n.pluralRules.select) {
@@ -91,7 +91,8 @@ function pluralExtractor(content, localeInfo) {
         replace(/goog\.i18n\.pluralRules\.get_vf_/g, 'getVF').
         replace(/goog\.i18n\.pluralRules\.get_wt_/g, 'getWT').
         replace(/goog\.i18n\.pluralRules\.decimals_/g, 'getDecimals').
-        replace(/\n/g, '');
+        replace(/\n/g, '')
+        replace(/function \(n/, 'function(n');
 
     ///@@ is a crazy place holder to be replaced before writing to file
     localeInfo[localeIds[i]].pluralCat = "@@" + temp + "@@";

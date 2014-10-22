@@ -1853,7 +1853,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
    * state (ng-pristine class). A model is considered to be pristine when the model has not been changed
    * from when first compiled within then form.
    */
-  this.$setPristine = function () {
+  this.$setPristine = function() {
     ctrl.$dirty = false;
     ctrl.$pristine = true;
     $animate.removeClass($element, DIRTY_CLASS);
@@ -1922,13 +1922,13 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
    *     angular.module('cancel-update-example', [])
    *
    *     .controller('CancelUpdateController', ['$scope', function($scope) {
-   *       $scope.resetWithCancel = function (e) {
+   *       $scope.resetWithCancel = function(e) {
    *         if (e.keyCode == 27) {
    *           $scope.myForm.myInput1.$rollbackViewValue();
    *           $scope.myValue = '';
    *         }
    *       };
-   *       $scope.resetWithoutCancel = function (e) {
+   *       $scope.resetWithoutCancel = function(e) {
    *         if (e.keyCode == 27) {
    *           $scope.myValue = '';
    *         }
@@ -2419,7 +2419,7 @@ var NgModelController = ['$scope', '$exceptionHandler', '$attrs', '$element', '$
          .controller('ExampleController', ['$scope', function($scope) {
            var _name = 'Brian';
            $scope.user = {
-             name: function (newName) {
+             name: function(newName) {
                if (angular.isDefined(newName)) {
                  _name = newName;
                }
@@ -2921,7 +2921,7 @@ var ngValueDirective = function() {
         .controller('ExampleController', ['$scope', function($scope) {
           $scope.user = { name: 'say', data: '' };
 
-          $scope.cancel = function (e) {
+          $scope.cancel = function(e) {
             if (e.keyCode == 27) {
               $scope.userForm.userName.$rollbackViewValue();
             }
@@ -2995,7 +2995,7 @@ var ngValueDirective = function() {
         .controller('ExampleController', ['$scope', function($scope) {
           var _name = 'Brian';
           $scope.user = {
-            name: function (newName) {
+            name: function(newName) {
               return angular.isDefined(newName) ? (_name = newName) : _name;
             }
           };

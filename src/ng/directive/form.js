@@ -232,7 +232,7 @@ function FormController(element, attrs, $scope, $animate, $interpolate) {
    * Setting a form back to a pristine state is often useful when we want to 'reuse' a form after
    * saving or resetting it.
    */
-  form.$setPristine = function () {
+  form.$setPristine = function() {
     $animate.setClass(element, PRISTINE_CLASS, DIRTY_CLASS + ' ' + SUBMITTED_CLASS);
     form.$dirty = false;
     form.$pristine = true;
@@ -255,7 +255,7 @@ function FormController(element, attrs, $scope, $animate, $interpolate) {
    * Setting a form controls back to their untouched state is often useful when setting the form
    * back to its pristine state.
    */
-  form.$setUntouched = function () {
+  form.$setUntouched = function() {
     forEach(controls, function(control) {
       control.$setUntouched();
     });
@@ -268,7 +268,7 @@ function FormController(element, attrs, $scope, $animate, $interpolate) {
    * @description
    * Sets the form to its submitted state.
    */
-  form.$setSubmitted = function () {
+  form.$setSubmitted = function() {
     $animate.addClass(element, SUBMITTED_CLASS);
     form.$submitted = true;
     parentForm.$setSubmitted();

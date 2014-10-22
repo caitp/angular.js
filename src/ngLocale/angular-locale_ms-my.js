@@ -94,6 +94,6 @@ $provide.value("$locale", {
     ]
   },
   "id": "ms-my",
-  "pluralCat": function (n) {  return PLURAL_CATEGORY.OTHER;}
+  "pluralCat": function(n) {  return PLURAL_CATEGORY.OTHER;}
 });
 }]);
